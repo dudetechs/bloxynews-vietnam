@@ -1,0 +1,15 @@
+name = "bloxy-news-vn-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "bloxy-news-vn"
+database_id = "PASTE_ID_FROM_wrangler_d1_create"
+
+[triggers]
+crons = ["*/30 * * * *"]
+
+[vars]
+# Comma-separated origins allowed to call the API from a browser.
+ALLOWED_ORIGINS = "https://YOUR-SITE.pages.dev,http://localhost:8788"
