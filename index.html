@@ -8,8 +8,8 @@
 <meta property="og:title" content="Bloxy News VN">
 <meta property="og:description" content="Independent Roblox community news in English and Vietnamese.">
 <meta property="og:type" content="website">
-<meta property="og:image" content="Images/logo.png">
-<link rel="icon" type="image/png" href="Images/WebIcon.png">
+<meta property="og:image" content="images/logo.png">
+<link rel="icon" type="image/png" href="images/WebIcon.png">
 <script>document.documentElement.classList.add("js");</script>
 <style>
 :root{--bg:#000;--bg2:#07090f;--card:#0d121d;--line:#1b2438;--text:#f2f6ff;--muted:#8fa0c4;--accent:#3b82f6;--accent2:#60a5fa;--r:18px;--max:1120px;
@@ -34,7 +34,7 @@ button,input{font:inherit;color:inherit}
 
 /* Background texture & image */
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-background:url("Images/textxure.png") center/cover no-repeat, url("Images/background.png") center/cover no-repeat, radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.2), transparent 80%);opacity:var(--tex);transform:translateZ(0)}
+background:url("images/textxure.png") center/cover no-repeat, url("images/background.png") center/cover no-repeat, radial-gradient(circle at 50% 50%, rgba(30, 58, 138, 0.2), transparent 80%);opacity:var(--tex);transform:translateZ(0)}
 body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
 background:radial-gradient(ellipse 95% 75% at 50% 38%,transparent 25%,rgba(0,0,0,.72) 100%)}
 
@@ -47,7 +47,7 @@ html.js .rv{opacity:0;translate:0 32px;transition:none}
 html.js .rv.pop{scale:.84;translate:0 44px}
 html.js .rv.blur{filter:blur(10px)}
 html.js .rv.in{opacity:1;translate:0 0;transition:opacity 1s var(--ease) var(--d,0s),translate 1s var(--ease) var(--d,0s)}
-html.js .rv.pop.in{scale:1;transition:opacity .7s var(--ease) var(--d,0s),translate .95s var(--spring) var(--d,0s),scale .95s var(--spring) var(--d,0s)}
+html.js .rv.pop.in{scale:1;translate:0 0;transition:opacity .7s var(--ease) var(--d,0s),translate .95s var(--spring) var(--d,0s),scale .95s var(--spring) var(--d,0s)}
 html.js .rv.blur.in{filter:none;transition:opacity 1s var(--ease) var(--d,0s),translate 1s var(--ease) var(--d,0s),filter 1s var(--ease) var(--d,0s)}
 
 /* nav */
@@ -65,6 +65,19 @@ header.scrolled .pill{background:rgba(7,10,18,.75);backdrop-filter:blur(30px) sa
 .follow{background:#fff;color:#000;font-weight:700;font-size:.85rem;padding:8px 16px;border-radius:999px;white-space:nowrap;transition:background .35s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease)}
 .follow:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 0 15px rgba(96,165,250,0.6)}
 .burger{display:none;background:none;border:0;cursor:pointer;font-size:1.3rem;padding:4px 8px}
+
+/* Mobile Liquid Glass Bottom Navigation */
+.mobile-bottom-nav{display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:99;background:rgba(13,18,29,0.55);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.18);box-shadow:0 16px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25);border-radius:999px;padding:6px 10px;gap:8px;align-items:center;width:calc(100% - 36px);max-width:320px;justify-content:space-around}
+.mobile-bottom-nav button,.mobile-bottom-nav a{background:none;border:0;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 16px;border-radius:999px;transition:all .3s var(--ease);position:relative;cursor:pointer}
+.mobile-bottom-nav button:active,.mobile-bottom-nav a:active{transform:scale(0.92)}
+.mobile-bottom-nav svg{width:22px;height:22px;fill:currentColor}
+.mobile-bottom-nav .mob-lang-tag{position:absolute;top:2px;right:6px;background:var(--accent);color:#fff;font-size:0.6rem;font-weight:800;padding:1px 5px;border-radius:999px;text-transform:uppercase;box-shadow:0 0 8px rgba(59,130,246,0.8)}
+
+/* Mobile Categories Drawer */
+.mob-cat-menu{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%);width:calc(100% - 40px);max-width:340px;background:rgba(13,18,29,0.92);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.15);border-radius:24px;padding:16px;z-index:98;box-shadow:0 20px 50px rgba(0,0,0,0.8);flex-direction:column;gap:8px;opacity:0;pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.mob-cat-menu.open{display:flex;opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(-6px)}
+.mob-cat-btn{background:rgba(255,255,255,0.05);border:1px solid var(--line);color:var(--text);padding:10px 16px;border-radius:12px;text-align:left;font-weight:600;font-size:0.9rem;display:flex;align-items:center;justify-content:space-between;transition:all .3s var(--ease)}
+.mob-cat-btn:hover,.mob-cat-btn[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
 
 /* hero */
 .hero{min-height:100svh;position:relative;display:flex;align-items:center;padding:100px 0 80px;
@@ -198,13 +211,15 @@ html.js .post.rv.in,html.js .member.rv.in{transition:opacity .7s var(--ease) var
 .scroll{display:none}
 }
 @media(max-width:860px){
-.burger{display:block}
+.mobile-bottom-nav{display:flex}
+header{display:none}
 .pill nav{position:absolute;top:calc(100% + 8px);left:14px;right:14px;background:rgba(13,18,29,.97);border:1px solid var(--line);border-radius:18px;padding:8px;
 opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s var(--ease),transform .4s var(--ease),visibility .3s}
 .pill nav.open{opacity:1;visibility:visible;transform:none}
 .pill nav ul{flex-direction:column}
 .pill{position:relative}
 .fg{grid-template-columns:1fr}
+body{padding-bottom:70px}
 }
 @media(max-width:480px){.follow{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
@@ -219,18 +234,13 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
       <stop offset=".5" stop-color="#3b82f6"/>
       <stop offset="1" stop-color="#1d4ed8"/>
     </linearGradient>
-    <!-- Vietnam Mainland Outline -->
     <path id="vnPath" d="M5 33 L30 21 L57 28 L72 21 L90 5 L114 12 L141 20 L159 45 L180 58 L159 69 L150 80 L143 85 L135 104 L124 112 L117 123 L111 141 L126 156 L138 177 L156 198 L168 213 L186 224 L201 246 L210 267 L218 291 L219 315 L221 336 L216 354 L207 366 L189 377 L165 386 L150 395 L141 405 L138 414 L123 420 L111 429 L81 447 L84 429 L90 411 L93 405 L76 395 L90 381 L114 375 L132 354 L147 345 L165 336 L165 303 L168 264 L162 240 L156 219 L138 207 L132 195 L117 174 L96 153 L81 135 L63 114 L69 93 L48 81 L30 63 L15 51 Z"/>
-    
-    <!-- Hoàng Sa (Paracel Islands) Cluster -->
     <g id="hoangSa">
       <circle cx="270" cy="180" r="4.5"/>
       <circle cx="279" cy="186" r="3.5"/>
       <circle cx="265" cy="192" r="3"/>
       <circle cx="284" cy="176" r="2.5"/>
     </g>
-
-    <!-- Trường Sa (Spratly Islands) Cluster -->
     <g id="truongSa">
       <circle cx="280" cy="330" r="4"/>
       <circle cx="295" cy="342" r="3.5"/>
@@ -238,8 +248,6 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
       <circle cx="310" cy="365" r="4.5"/>
       <circle cx="288" cy="360" r="2.5"/>
     </g>
-
-    <!-- Phú Quốc Island -->
     <g id="phuQuoc">
       <path d="M56 428 C54 420, 62 410, 68 415 C72 422, 65 435, 60 432 Z"/>
     </g>
@@ -250,7 +258,7 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
 
 <header>
   <div class="pill electric-element">
-    <a class="brand" href="#top" aria-label="Bloxy News VN"><img src="Images/logo.png" width="36" height="36" alt="Bloxy News VN logo" onerror="this.src='https://placehold.co/72x72/0d121d/60a5fa?text=BN'"></a>
+    <a class="brand" href="#top" aria-label="Bloxy News VN"><img src="images/logo.png" width="36" height="36" alt="Bloxy News VN logo" onerror="this.src='https://placehold.co/72x72/0d121d/60a5fa?text=BN'"></a>
     <nav id="nav" aria-label="Main">
       <ul>
         <li><a href="#top" data-en="Home" data-vi="Trang chủ">Home</a></li>
@@ -268,6 +276,31 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
     <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav">☰</button>
   </div>
 </header>
+
+<!-- Mobile Categories Popup Drawer -->
+<div class="mob-cat-menu" id="mob-cat-menu" aria-label="Mobile Categories Menu">
+  <button type="button" class="mob-cat-btn" data-c="popular" data-en="Popular" data-vi="Phổ biến">Popular</button>
+  <button type="button" class="mob-cat-btn" data-c="news" data-en="Roblox News" data-vi="Tin Roblox">Roblox News</button>
+  <button type="button" class="mob-cat-btn" data-c="updates" data-en="Platform Updates" data-vi="Cập nhật nền tảng">Platform Updates</button>
+  <button type="button" class="mob-cat-btn" data-c="games" data-en="Games Update" data-vi="Cập nhật game">Games Update</button>
+  <button type="button" class="mob-cat-btn" data-c="vietnam" data-en="Vietnam" data-vi="Việt Nam">Vietnam</button>
+</div>
+
+<!-- Mobile Liquid Glass Bottom Bar -->
+<div class="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
+  <a href="#top" aria-label="Home Logo">
+    <img src="images/logo.png" width="26" height="26" alt="Logo" style="border-radius:6px;" onerror="this.src='https://placehold.co/52x52/0d121d/60a5fa?text=BN'">
+  </a>
+  
+  <button type="button" id="mob-cat-toggle" aria-label="Categories">
+    <svg viewBox="0 0 24 24"><path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/></svg>
+  </button>
+
+  <button type="button" id="mob-lang-btn" aria-label="Language Selector">
+    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+    <span class="mob-lang-tag" id="mob-lang-tag">EN</span>
+  </button>
+</div>
 
 <main id="main">
   <div class="hero" id="top">
@@ -325,17 +358,16 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
         <p class="sub" style="margin:0 auto" data-en="Tips, corrections and business inquiries are welcome." data-vi="Chúng tôi hoan nghênh tin báo, đính chính và liên hệ hợp tác.">Tips, corrections and business inquiries are welcome.</p>
         <div class="btns" id="cta-btns"></div>
 
-        <!-- Social Media Buttons -->
         <div class="social-hub" id="social-hub-row">
           <a class="social-card x electric-element" href="https://x.com/BloxyNewsVN" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
             <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
             <span>X (Twitter)</span>
           </a>
-          <a class="social-card bsky electric-element" href="https://bsky.app/profile/bloxynews-vn.bsky.social" target="_blank" rel="noopener noreferrer" aria-label="Bluesky">
+          <a class="social-card bsky electric-element" href="https://bsky.app" target="_blank" rel="noopener noreferrer" aria-label="Bluesky">
             <svg viewBox="0 0 568 501"><path d="M123.121 33.664c61.277 46.12 126.96 140.11 160.879 194.02 33.918-53.91 99.602-147.9 160.879-194.02 44.25-33.307 108.605-57.94 108.605 22.387 0 16.035-9.196 135.043-14.59 154.542-18.75 67.784-87.03 85.127-147.887 74.773 106.398 18.17 133.434 78.435 75.035 138.544-110.875 114.12-167.925-28.618-182.042-71.93-1.472-4.512-2.316-7.098-2.316-7.098s-.844 2.586-2.316 7.098c-14.117 43.312-71.167 186.05-182.042 71.93-58.399-60.109-31.363-120.374 75.035-138.544-60.857 10.354-129.137-6.989-147.887-74.773C21.71 191.09 12.514 72.086 12.514 56.05c0-80.327 64.355-55.694 108.607-22.387z"/></svg>
             <span>Bluesky</span>
           </a>
-          <a class="social-card youtube electric-element" href="https://www.youtube.com/@BloxyNewsVN" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+          <a class="social-card youtube electric-element" href="https://youtube.com" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
             <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
             <span>YouTube</span>
           </a>
@@ -358,7 +390,7 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
   <div class="wrap">
     <div class="fg">
       <div class="rv">
-        <a class="brand" href="#top" aria-label="Bloxy News VN"><img src="Images/logo.png" width="44" height="44" alt="Bloxy News VN logo" style="width:44px;height:44px;border-radius:12px;object-fit:contain" onerror="this.src='https://placehold.co/88x88/0d121d/60a5fa?text=BN'"></a>
+        <a class="brand" href="#top" aria-label="Bloxy News VN"><img src="images/logo.png" width="44" height="44" alt="Bloxy News VN logo" style="width:44px;height:44px;border-radius:12px;object-fit:contain" onerror="this.src='https://placehold.co/88x88/0d121d/60a5fa?text=BN'"></a>
         <p data-en="Independent Roblox community news in English and Vietnamese." data-vi="Tin tức cộng đồng Roblox độc lập bằng tiếng Anh và tiếng Việt.">Independent Roblox community news.</p>
       </div>
       <div class="rv" style="--d:.1s">
@@ -415,12 +447,6 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
 
   var TEAM = [
     { name: "DudeTechs", handle: "", role: { en: "Owner", vi: "Người sở hữu" }, img: "" }
-  ];
-
-  var SOCIALS = [
-    { name: "X",       url: "https://x.com/BloxyNewsVN" },
-    { name: "Discord", url: "https://discord.gg/dZd6knudFw" },
-    { name: "YouTube", url: "" }
   ];
 
   var WORDS = {
@@ -701,6 +727,11 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
       var label = k === "popular" ? T("Phổ biến", "Popular") : CATS[k][lang];
       return '<button type="button" class="chip electric-element" data-c="' + k + '" aria-pressed="' + (k === cat) + '">' + esc(label) + "</button>";
     }).join("");
+
+    $$(".mob-cat-btn").forEach(function (b) {
+      var k = b.getAttribute("data-c");
+      b.setAttribute("aria-pressed", String(k === cat));
+    });
   }
 
   function metric(label, v) {
@@ -788,6 +819,8 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
     lang = l === "vi" ? "vi" : "en";
     document.documentElement.lang = lang;
     $$(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-set") === lang)); });
+    var tag = $("#mob-lang-tag");
+    if (tag) tag.textContent = lang.toUpperCase();
     applyText();
     renderStats(!!first); renderChips(); renderStories(first ? 0 : Infinity); renderTeam(!!first); renderContact();
     resetWords();
@@ -846,6 +879,24 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
       setTimeout(function () { setLang(l, true); document.body.classList.remove("swap"); }, 260);
     });
   });
+
+  /* Mobile language switcher */
+  $("#mob-lang-btn").addEventListener("click", function () {
+    var nextLang = lang === "en" ? "vi" : "en";
+    setLang(nextLang, true);
+  });
+
+  /* Mobile category menu toggle */
+  $("#mob-cat-toggle").addEventListener("click", function () {
+    $("#mob-cat-menu").classList.toggle("open");
+  });
+
+  $("#mob-cat-menu").addEventListener("click", function (e) {
+    var b = e.target.closest(".mob-cat-btn"); if (!b) return;
+    cat = b.getAttribute("data-c"); renderChips(); renderStories(0);
+    $("#mob-cat-menu").classList.remove("open");
+  });
+
   $("#chips").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-c]"); if (!b) return;
     cat = b.getAttribute("data-c"); renderChips(); renderStories(0);
@@ -864,7 +915,11 @@ opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s va
     });
   });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { $("#nav").classList.remove("open"); $("#burger").setAttribute("aria-expanded", "false"); }
+    if (e.key === "Escape") { 
+      $("#nav").classList.remove("open"); 
+      $("#mob-cat-menu").classList.remove("open");
+      $("#burger").setAttribute("aria-expanded", "false"); 
+    }
   });
 
   var hdr = $("header"), heroEl = $("#top"), ticking = false;
