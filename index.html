@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Bloxy News VN — Independent Roblox News</title>
 <meta name="description" content="Independent Roblox community news in English and Vietnamese.">
 <meta property="og:title" content="Bloxy News VN">
@@ -26,11 +26,14 @@ button,input{font:inherit;color:inherit}
 .skip{position:absolute;left:-999px;background:var(--accent);color:#fff;padding:8px 14px;z-index:100}
 .skip:focus{left:8px;top:8px}
 
-/* Electric interactive elements */
-.electric-element{position:relative;transition:border-color .3s var(--ease),box-shadow .3s var(--ease)}
-.electric-element::before{content:"";position:absolute;inset:-3px;border-radius:calc(var(--r, 18px) + 3px);background:linear-gradient(90deg,#3b82f6,#60a5fa,#00ffff,#3b82f6);background-size:300% 300%;opacity:0;z-index:-1;transition:opacity .3s ease;pointer-events:none}
-.electric-element:hover::before,.electric-element.electric-active::before{opacity:0.85;animation:electricSheen 2s linear infinite}
-@keyframes electricSheen{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+/* Electric hover ring — a border-only gradient (masked), so it can never cover the element's content */
+.electric-element{position:relative}
+.electric-element::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:2px;pointer-events:none;
+background:linear-gradient(90deg,#3b82f6,#60a5fa,#22d3ee,#3b82f6);background-size:300% 100%;
+-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;
+opacity:0;transition:opacity .3s ease}
+.electric-element:hover::before,.electric-element.electric-active::before{opacity:1;animation:electricSheen 2s linear infinite}
+@keyframes electricSheen{0%{background-position:0% 50%}100%{background-position:300% 50%}}
 
 /* Background texture & image */
 body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
@@ -50,7 +53,7 @@ html.js .rv.in{opacity:1;translate:0 0;transition:opacity 1s var(--ease) var(--d
 html.js .rv.pop.in{scale:1;translate:0 0;transition:opacity .7s var(--ease) var(--d,0s),translate .95s var(--spring) var(--d,0s),scale .95s var(--spring) var(--d,0s)}
 html.js .rv.blur.in{filter:none;transition:opacity 1s var(--ease) var(--d,0s),translate 1s var(--ease) var(--d,0s),filter 1s var(--ease) var(--d,0s)}
 
-/* nav */
+/* nav (desktop) */
 header{position:fixed;top:14px;left:0;right:0;z-index:50;display:flex;justify-content:center;padding:0 14px;pointer-events:none}
 .pill{pointer-events:auto;display:flex;align-items:center;gap:6px;background:rgba(13,18,29,.45);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid rgba(255,255,255,.12);box-shadow:0 8px 32px 0 rgba(0,0,0,.36), inset 0 1px 0 0 rgba(255,255,255,.15);border-radius:999px;padding:6px 8px 6px 10px;max-width:100%;transition:background .45s var(--ease),box-shadow .45s var(--ease),border-color .45s var(--ease)}
 header.scrolled .pill{background:rgba(7,10,18,.75);backdrop-filter:blur(30px) saturate(200%);-webkit-backdrop-filter:blur(30px) saturate(200%);box-shadow:0 12px 40px -10px rgba(0,0,0,.85), inset 0 1px 0 0 rgba(255,255,255,.2);border-color:rgba(96,165,250,.3)}
@@ -64,20 +67,61 @@ header.scrolled .pill{background:rgba(7,10,18,.75);backdrop-filter:blur(30px) sa
 .lang button[aria-pressed=true]{background:var(--accent);color:#fff}
 .follow{background:#fff;color:#000;font-weight:700;font-size:.85rem;padding:8px 16px;border-radius:999px;white-space:nowrap;transition:background .35s var(--ease),transform .35s var(--ease),box-shadow .35s var(--ease)}
 .follow:hover{background:var(--accent2);transform:translateY(-1px);box-shadow:0 0 15px rgba(96,165,250,0.6)}
-.burger{display:none;background:none;border:0;cursor:pointer;font-size:1.3rem;padding:4px 8px}
 
-/* Mobile Liquid Glass Bottom Navigation */
-.mobile-bottom-nav{display:none;position:fixed;bottom:18px;left:50%;transform:translateX(-50%);z-index:99;background:rgba(13,18,29,0.55);backdrop-filter:blur(28px) saturate(200%);-webkit-backdrop-filter:blur(28px) saturate(200%);border:1px solid rgba(255,255,255,0.18);box-shadow:0 16px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.25);border-radius:999px;padding:6px 10px;gap:8px;align-items:center;width:calc(100% - 36px);max-width:320px;justify-content:space-around;pointer-events:auto}
-.mobile-bottom-nav button,.mobile-bottom-nav a{background:none;border:0;color:var(--muted);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 16px;border-radius:999px;transition:all .3s var(--ease);position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent}
-.mobile-bottom-nav button:active,.mobile-bottom-nav a:active{transform:scale(0.92)}
-.mobile-bottom-nav svg{width:22px;height:22px;fill:currentColor;pointer-events:none}
-.mobile-bottom-nav .mob-lang-tag{position:absolute;top:2px;right:6px;background:var(--accent);color:#fff;font-size:0.6rem;font-weight:800;padding:1px 5px;border-radius:999px;text-transform:uppercase;box-shadow:0 0 8px rgba(59,130,246,0.8);pointer-events:none}
+/* ================= MOBILE DOCK — Apple-style liquid glass ================= */
+.dock,.sheet,.scrim{display:none}
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom));translate:-50% 0;z-index:100;width:min(calc(100vw - 28px),380px);padding:6px;gap:2px;align-items:stretch;border-radius:999px;
+background:linear-gradient(180deg,rgba(255,255,255,.16),rgba(255,255,255,.05)),rgba(12,17,29,.5);
+backdrop-filter:blur(26px) saturate(200%) brightness(1.1);-webkit-backdrop-filter:blur(26px) saturate(200%) brightness(1.1);
+border:1px solid rgba(255,255,255,.18);
+box-shadow:0 22px 44px -14px rgba(0,0,0,.75),inset 0 1px 0 rgba(255,255,255,.4),inset 0 -1px 0 rgba(255,255,255,.06),inset 0 0 22px rgba(96,165,250,.1);
+touch-action:none;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
+animation:dockIn .9s var(--spring) .4s backwards}
+.dock::before{content:"";position:absolute;left:14%;right:14%;top:1px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,.85),transparent);pointer-events:none}
+@keyframes dockIn{from{opacity:0;translate:-50% 44px;scale:.9}}
 
-/* Mobile Categories Drawer */
-.mob-cat-menu{display:none;position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(12px);width:calc(100% - 40px);max-width:340px;background:rgba(13,18,29,0.96);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,0.18);border-radius:24px;padding:16px;z-index:999;box-shadow:0 20px 50px rgba(0,0,0,0.85);flex-direction:column;gap:8px;opacity:0;pointer-events:none;transition:opacity .3s var(--ease),transform .3s var(--ease)}
-.mob-cat-menu.open{display:flex!important;opacity:1!important;pointer-events:auto!important;transform:translateX(-50%) translateY(0)!important}
-.mob-cat-btn{background:rgba(255,255,255,0.05);border:1px solid var(--line);color:var(--text);padding:12px 16px;border-radius:12px;text-align:left;font-weight:600;font-size:0.92rem;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:all .3s var(--ease)}
-.mob-cat-btn:hover,.mob-cat-btn[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+.lens{position:absolute;top:6px;bottom:6px;left:0;width:var(--lw,60px);translate:var(--lx,6px) 0;border-radius:999px;pointer-events:none;z-index:1;
+background:linear-gradient(180deg,rgba(255,255,255,.3) 0%,rgba(255,255,255,.1) 46%,rgba(96,165,250,.26) 100%);
+box-shadow:inset 0 1px 0 rgba(255,255,255,.65),inset 0 -1px 0 rgba(255,255,255,.12),inset 0 0 0 1px rgba(255,255,255,.14),inset 0 -10px 16px rgba(96,165,250,.22),0 8px 22px -6px rgba(59,130,246,.55);
+transition:translate .62s var(--spring),width .62s var(--spring),scale .45s var(--spring),box-shadow .4s var(--ease);will-change:translate,width,scale}
+.lens::before{content:"";position:absolute;left:12%;right:12%;top:2px;height:42%;border-radius:999px;background:linear-gradient(180deg,rgba(255,255,255,.55),rgba(255,255,255,0));opacity:.85}
+.lens.stretch{scale:1.16 .94}
+.lens.press{scale:1.14 1.12;box-shadow:inset 0 1px 0 rgba(255,255,255,.85),inset 0 -1px 0 rgba(255,255,255,.18),inset 0 0 0 1px rgba(255,255,255,.22),inset 0 -12px 18px rgba(96,165,250,.34),0 12px 30px -6px rgba(59,130,246,.8)}
+.lens.jelly{animation:jelly .68s var(--ease) 1}
+@keyframes jelly{0%{scale:1.14 1.12}30%{scale:.93 1.05}55%{scale:1.05 .97}78%{scale:.99 1.01}100%{scale:1 1}}
+
+.dock-btn{position:relative;z-index:2;flex:1 1 0;min-width:0;height:54px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;background:none;border:0;border-radius:999px;color:rgba(226,234,252,.62);font-size:.6rem;font-weight:700;letter-spacing:.02em;white-space:nowrap;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:color .35s var(--ease)}
+.dock-btn svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;pointer-events:none;transition:transform .5s var(--spring)}
+.dock-btn.on{color:#fff}
+.dock-btn.on svg{transform:translateY(-1px) scale(1.1)}
+.dock-btn:active svg{transform:scale(.86)}
+.dock-btn:focus-visible{outline-offset:-3px}
+
+.scrim{position:fixed;inset:0;z-index:90;background:rgba(0,0,0,.42);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);opacity:0;pointer-events:none;transition:opacity .4s var(--ease)}
+.scrim.open{opacity:1;pointer-events:auto}
+
+.sheet{position:fixed;left:50%;bottom:calc(92px + env(safe-area-inset-bottom));z-index:95;width:min(calc(100vw - 28px),380px);padding:16px 14px 14px;border-radius:30px;
+background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.04)),rgba(10,14,24,.62);
+backdrop-filter:blur(30px) saturate(190%);-webkit-backdrop-filter:blur(30px) saturate(190%);
+border:1px solid rgba(255,255,255,.18);
+box-shadow:0 26px 60px -16px rgba(0,0,0,.85),inset 0 1px 0 rgba(255,255,255,.35),inset 0 0 26px rgba(96,165,250,.08);
+transform:translate(-50%,28px) scale(.9);transform-origin:50% 100%;opacity:0;visibility:hidden;pointer-events:none;
+transition:transform .6s var(--spring),opacity .3s var(--ease),visibility 0s .6s}
+.sheet.open{transform:translate(-50%,0) scale(1);opacity:1;visibility:visible;pointer-events:auto;transition:transform .6s var(--spring),opacity .3s var(--ease),visibility 0s}
+.sheet-title{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2);margin:0 4px 12px}
+.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.sheet-grid .sheet-btn:nth-child(5){grid-column:1/-1}
+.sheet-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:18px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:var(--text);font-weight:700;font-size:.88rem;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent;
+opacity:0;translate:0 12px;
+transition:opacity .35s var(--ease) calc(var(--i,0) * .04s + .1s),translate .55s var(--spring) calc(var(--i,0) * .04s + .1s),scale .3s var(--spring),background .35s var(--ease),border-color .35s var(--ease)}
+.sheet.open .sheet-btn{opacity:1;translate:0 0}
+.sheet-btn:active{scale:.94}
+.sheet-btn[aria-pressed=true]{background:linear-gradient(180deg,rgba(96,165,250,.55),rgba(59,130,246,.34));border-color:rgba(147,197,253,.65);box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.sheet-btn .cd{width:10px;height:10px;border-radius:50%;flex:none;background:var(--c,#60a5fa);box-shadow:0 0 10px var(--c,#60a5fa)}
+.sheet-links{display:flex;gap:8px;margin-top:10px}
+.sheet-link{flex:1;text-align:center;padding:11px 10px;border-radius:999px;font-weight:700;font-size:.82rem;color:#000;background:rgba(255,255,255,.92);transition:scale .3s var(--spring),background .3s var(--ease)}
+.sheet-link.alt{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(255,255,255,.16)}
+.sheet-link:active{scale:.94}
 
 /* hero */
 .hero{min-height:100svh;position:relative;display:flex;align-items:center;padding:100px 0 80px;
@@ -98,17 +142,27 @@ html.js .scene{animation:sceneIn 1.6s var(--ease) .3s backwards}
 @keyframes sheen{from{background-position:0 0}to{background-position:100% 0}}
 @keyframes sceneIn{from{opacity:0;translate:0 30px;scale:.94}to{opacity:1;translate:0 0;scale:1}}
 
-/* 3D Vietnam Map */
-.scene{position:relative;height:min(76vh,640px);perspective:1500px;perspective-origin:50% 35%;pointer-events:none;
+/* 3D Vietnam — real coastline (Natural Earth, public domain), stacked into a slab */
+.scene{position:relative;height:min(74vh,600px);perspective:1500px;perspective-origin:50% 35%;pointer-events:none;
 translate:0 calc(var(--hp,0) * -70px);scale:calc(1 - var(--hp,0) * .08);opacity:calc(1 - var(--hp,0) * .7)}
-.scene::before{content:"";position:absolute;inset:10% 6%;background:radial-gradient(closest-side,rgba(37,99,235,.38),transparent);filter:blur(34px)}
-.stage{position:absolute;top:0;left:50%;height:100%;aspect-ratio:226/452;translate:-50% 0;transform-style:preserve-3d;will-change:transform}
-.layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;stroke:rgba(147,197,253,.22);stroke-width:.7;stroke-linejoin:round}
+.scene::before{content:"";position:absolute;inset:10% 6%;background:radial-gradient(closest-side,rgba(37,99,235,.4),transparent);filter:blur(34px)}
+.stage{position:absolute;top:0;left:50%;height:100%;aspect-ratio:377.1/440.1;translate:-50% 0;transform-style:preserve-3d;will-change:transform}
+.layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;stroke:rgba(147,197,253,.2);stroke-width:.6;stroke-linejoin:round}
 .layer.sh{fill:#1e40af;stroke:none;filter:blur(14px);opacity:.55}
-.layer.top{fill:url(#vnTop);stroke:rgba(191,219,254,.75);stroke-width:1}
-.dot{position:absolute;width:12px;height:12px;margin:-6px 0 0 -6px;border-radius:50%;background:#fff;box-shadow:0 0 14px 3px rgba(96,165,250,.95)}
+.layer.top{fill:url(#vnTop);stroke:rgba(191,219,254,.8);stroke-width:.9;filter:drop-shadow(0 0 5px rgba(96,165,250,.6))}
+.layer.sheen{fill:url(#vnSheen);stroke:none}
+.layer.floor{inset:auto;left:-20%;top:-20%;width:140%;height:140%;fill:none;stroke:rgba(96,165,250,.3);stroke-width:.5;
+-webkit-mask-image:radial-gradient(closest-side,#000 32%,transparent 100%);mask-image:radial-gradient(closest-side,#000 32%,transparent 100%)}
+.dot{display:block;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 14px 3px rgba(96,165,250,.95);position:relative}
 .dot::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:1.5px solid rgba(147,197,253,.9);animation:ping 2.6s var(--ease2) infinite;animation-delay:var(--pd,0s)}
 @keyframes ping{0%{transform:scale(.4);opacity:.9}100%{transform:scale(2.6);opacity:0}}
+/* pins always face the viewer: the stage tilt is cancelled by the same angles, reversed */
+.pin{position:absolute;width:0;height:0;pointer-events:none;
+transform:translateZ(var(--tz,20px)) rotateZ(calc(var(--rz,3) * -1deg)) rotateY(calc(var(--ry,-28) * -1deg)) rotateX(calc(var(--rx,28) * -1deg))}
+.pin .dot{position:absolute;left:-6px;top:-6px}
+.pin.sm .dot{width:7px;height:7px;left:-3.5px;top:-3.5px;box-shadow:0 0 10px 2px rgba(96,165,250,.8)}
+.tag3d{position:absolute;left:0;bottom:14px;translate:-50% 0;white-space:nowrap;font-size:11px;font-weight:700;letter-spacing:.02em;color:#fff;padding:3px 9px;border-radius:999px;background:rgba(10,16,30,.66);border:1px solid rgba(147,197,253,.42);box-shadow:0 6px 16px -6px rgba(37,99,235,.7)}
+.pin.sm .tag3d{font-size:10px;bottom:10px;opacity:.88}
 
 .scroll{position:absolute;bottom:26px;left:50%;translate:-50% 0;color:var(--muted);font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:calc(1 - var(--hp,0) * 4)}
 .scroll i{width:1px;height:34px;background:linear-gradient(var(--accent2),transparent);animation:drop 2s var(--ease2) infinite}
@@ -187,6 +241,7 @@ html.js .post.rv.in,html.js .member.rv.in{transition:opacity .7s var(--ease) var
 .cta .btns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:22px}
 .btn{display:inline-block;background:#fff;color:#000;font-weight:700;padding:12px 24px;border-radius:999px;transition:background .35s var(--ease),color .3s var(--ease),border-color .3s var(--ease),transform .35s var(--ease)}
 .btn:hover{background:var(--accent2);transform:translateY(-2px)}
+.btn:active,.follow:active,.more:active{transform:scale(.96)}
 .btn.ghost{background:none;color:#fff;border:1px solid var(--line)}
 .btn.ghost:hover{border-color:var(--accent2);color:var(--accent2);background:none}
 
@@ -211,17 +266,13 @@ html.js .post.rv.in,html.js .member.rv.in{transition:opacity .7s var(--ease) var
 .scroll{display:none}
 }
 @media(max-width:860px){
-.mobile-bottom-nav{display:flex}
 header{display:none}
-.pill nav{position:absolute;top:calc(100% + 8px);left:14px;right:14px;background:rgba(13,18,29,.97);border:1px solid var(--line);border-radius:18px;padding:8px;
-opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s var(--ease),transform .4s var(--ease),visibility .3s}
-.pill nav.open{opacity:1;visibility:visible;transform:none}
-.pill nav ul{flex-direction:column}
-.pill{position:relative}
+.dock{display:flex}
+.sheet,.scrim{display:block}
 .fg{grid-template-columns:1fr}
-body{padding-bottom:70px}
+html{scroll-padding-top:16px}
+body{padding-bottom:calc(92px + env(safe-area-inset-bottom))}
 }
-@media(max-width:480px){.follow{display:none}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
@@ -229,28 +280,27 @@ body{padding-bottom:70px}
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
-    <linearGradient id="vnTop" x1="0" y1="0" x2="1" y2="1">
+    <linearGradient id="vnTop" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="200" y2="420">
       <stop offset="0" stop-color="#93c5fd"/>
       <stop offset=".5" stop-color="#3b82f6"/>
       <stop offset="1" stop-color="#1d4ed8"/>
     </linearGradient>
-    <path id="vnPath" d="M5 33 L30 21 L57 28 L72 21 L90 5 L114 12 L141 20 L159 45 L180 58 L159 69 L150 80 L143 85 L135 104 L124 112 L117 123 L111 141 L126 156 L138 177 L156 198 L168 213 L186 224 L201 246 L210 267 L218 291 L219 315 L221 336 L216 354 L207 366 L189 377 L165 386 L150 395 L141 405 L138 414 L123 420 L111 429 L81 447 L84 429 L90 411 L93 405 L76 395 L90 381 L114 375 L132 354 L147 345 L165 336 L165 303 L168 264 L162 240 L156 219 L138 207 L132 195 L117 174 L96 153 L81 135 L63 114 L69 93 L48 81 L30 63 L15 51 Z"/>
-    <g id="hoangSa">
-      <circle cx="270" cy="180" r="4.5"/>
-      <circle cx="279" cy="186" r="3.5"/>
-      <circle cx="265" cy="192" r="3"/>
-      <circle cx="284" cy="176" r="2.5"/>
-    </g>
-    <g id="truongSa">
-      <circle cx="280" cy="330" r="4"/>
-      <circle cx="295" cy="342" r="3.5"/>
-      <circle cx="270" cy="350" r="3"/>
-      <circle cx="310" cy="365" r="4.5"/>
-      <circle cx="288" cy="360" r="2.5"/>
-    </g>
-    <g id="phuQuoc">
-      <path d="M56 428 C54 420, 62 410, 68 415 C72 422, 65 435, 60 432 Z"/>
-    </g>
+    <linearGradient id="vnSheen" gradientUnits="userSpaceOnUse" x1="-110" y1="0" x2="0" y2="110">
+      <stop offset="0" stop-color="#fff" stop-opacity="0"/>
+      <stop offset=".5" stop-color="#fff" stop-opacity=".5"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+      <animateTransform id="vnSheenAnim" attributeName="gradientTransform" type="translate" from="-40 -40" to="560 560" dur="7s" repeatCount="indefinite"/>
+    </linearGradient>
+
+    <!-- Mainland: Natural Earth 1:10m (public domain), simplified. Projection: equirectangular, 27 units per degree. -->
+    <path id="vnPath" d="M146.2 242.9 145.4 240.2 147.1 237.9 144.2 234.2 147.9 233.3 149.9 227.6 145.3 221.9 142.2 221.5 136.5 214.0 137.5 211.7 142.4 210.1 144.2 207.6 143.8 205.9 140.4 206.2 136.6 203.4 135.5 200.7 131.5 199.6 128.8 196.7 128.7 193.6 125.9 196.5 124.1 195.9 123.4 192.4 120.5 189.4 120.2 181.2 117.3 181.0 114.1 173.2 111.4 173.9 99.4 162.7 92.8 149.0 91.3 148.5 90.2 149.9 88.2 147.1 84.9 145.6 82.7 141.6 85.0 137.3 83.5 135.0 73.0 132.4 58.4 122.0 50.7 118.8 56.9 113.8 54.6 108.5 56.9 109.3 60.6 107.8 70.6 110.5 71.8 107.7 75.6 105.6 74.9 102.4 79.3 100.0 78.2 95.2 75.9 93.9 72.6 94.6 71.5 93.8 72.3 90.7 69.6 88.7 64.0 88.0 66.2 85.4 68.7 85.4 70.6 82.4 61.9 75.8 57.0 74.0 49.0 77.1 46.5 82.2 40.1 77.9 37.7 78.6 31.6 76.5 25.7 66.8 23.4 66.0 25.4 64.7 26.5 60.7 24.7 61.4 27.9 57.4 27.3 53.0 24.6 53.9 23.6 50.3 22.8 53.8 19.5 55.1 18.0 48.6 15.0 47.1 15.2 45.3 8.0 39.3 5.8 35.5 8.6 34.4 14.2 25.2 24.3 29.7 26.0 33.0 28.9 34.3 37.0 24.6 41.7 30.2 45.4 24.3 53.6 32.2 56.5 24.8 60.9 23.6 60.8 25.9 63.5 27.4 69.0 23.3 72.9 23.8 76.0 20.9 75.4 16.6 77.3 14.5 85.9 12.0 88.8 9.0 94.4 14.7 95.0 17.3 98.6 17.7 102.8 21.5 110.0 19.6 113.8 22.9 119.3 20.9 127.2 24.4 124.3 30.2 121.6 29.8 120.3 34.1 120.7 36.6 123.1 37.5 123.9 39.9 123.6 46.7 125.6 45.7 130.5 48.2 132.9 47.9 132.3 50.7 137.1 53.6 139.7 53.5 141.7 56.7 143.7 55.3 145.9 57.2 152.9 55.2 158.4 59.8 156.8 61.0 156.3 58.7 154.4 59.7 153.0 58.7 153.1 60.5 150.0 61.8 148.2 64.8 146.3 63.5 146.3 64.8 143.4 64.0 144.2 65.1 142.1 65.5 142.3 72.1 138.1 73.1 137.7 74.6 134.4 74.0 136.5 71.8 133.8 72.9 133.3 72.0 132.7 74.2 128.8 73.1 131.2 75.3 129.4 74.6 129.2 76.1 126.7 74.0 128.0 73.5 127.3 72.2 123.3 72.4 126.2 74.5 124.8 76.1 127.6 81.6 123.9 81.1 124.9 82.1 123.2 82.9 121.9 82.0 122.9 83.7 120.1 85.3 121.7 85.1 120.1 88.1 122.1 87.8 122.0 92.5 119.6 91.6 121.4 93.7 116.5 94.2 111.2 100.1 109.4 100.9 109.4 99.0 108.8 100.9 107.3 99.9 105.4 101.9 104.8 105.5 103.2 106.0 104.8 105.8 101.2 110.6 101.7 119.3 99.9 120.6 99.8 124.0 98.0 124.5 96.5 127.3 100.2 132.7 100.1 136.0 101.0 133.7 102.1 137.9 109.3 147.1 113.7 148.4 115.6 152.3 117.9 150.6 120.2 155.2 118.0 157.1 119.6 161.7 114.1 160.0 117.8 161.2 116.6 161.5 117.2 162.4 119.8 162.4 126.5 171.8 135.5 178.5 137.9 183.1 136.3 184.5 138.3 183.4 149.2 192.0 144.2 190.4 149.9 193.0 149.9 194.5 150.8 193.9 154.5 197.6 153.4 197.4 153.7 199.4 155.9 200.4 156.8 198.4 159.7 198.6 161.0 201.5 160.0 201.5 164.0 202.1 162.4 203.9 164.6 205.5 163.8 207.8 165.4 207.6 165.0 203.5 167.4 203.9 165.5 205.0 165.9 208.0 169.3 211.1 174.7 220.6 176.4 220.9 175.0 222.6 176.8 221.7 178.7 226.1 180.1 223.3 181.6 227.2 183.4 228.1 181.1 230.8 182.3 230.9 184.3 239.3 186.9 242.6 186.2 246.7 192.6 265.3 192.5 268.4 191.2 264.8 190.4 267.1 192.3 274.6 190.1 271.9 193.3 277.0 192.6 277.9 191.0 275.8 190.6 278.3 192.6 279.4 191.4 280.9 192.3 282.5 193.0 281.4 192.6 285.3 196.8 291.7 194.2 293.6 196.9 298.2 196.3 300.5 195.1 297.4 193.5 298.1 194.8 296.7 194.0 294.4 190.0 298.4 190.0 301.0 191.1 300.1 190.8 301.8 193.6 305.2 192.4 306.4 188.6 304.0 190.9 307.7 189.2 308.4 190.4 310.5 189.4 310.7 192.3 319.4 190.4 319.2 188.9 312.9 190.1 316.5 187.9 319.6 188.9 320.7 190.0 319.5 190.9 323.0 188.2 327.5 185.2 325.8 184.8 333.6 180.0 334.1 177.6 338.0 172.5 338.8 166.5 345.3 165.4 344.2 161.4 345.1 158.6 351.0 154.0 351.2 145.9 356.4 141.3 357.7 139.7 359.7 137.5 358.9 137.2 357.0 132.4 356.9 133.5 355.4 132.2 351.0 133.3 355.4 132.4 353.0 133.0 355.8 131.7 357.3 131.2 353.7 126.0 351.7 125.7 355.8 121.7 357.7 125.8 357.3 127.2 362.2 117.6 361.3 127.3 365.7 123.5 370.6 119.6 368.9 114.2 362.8 119.2 369.5 124.7 372.7 124.0 374.1 123.9 373.0 121.9 374.7 109.6 363.6 121.5 377.0 120.8 381.1 116.7 382.1 101.9 369.7 108.5 376.7 111.7 382.3 111.6 386.9 94.7 393.4 88.8 402.0 83.2 406.8 76.9 408.6 73.4 407.6 76.2 405.0 79.7 404.5 76.8 404.7 78.8 403.7 78.6 402.0 75.9 403.1 74.7 401.8 76.3 381.9 77.8 373.9 79.9 373.9 82.6 371.4 83.5 373.8 83.4 371.2 80.7 367.4 78.0 367.3 74.7 363.8 70.5 366.0 67.7 360.3 68.3 358.6 66.9 359.7 66.3 358.6 69.4 355.6 76.8 355.6 82.3 350.6 80.9 346.0 82.7 344.3 88.9 347.2 91.3 343.9 100.2 342.5 103.5 347.6 104.9 345.7 111.2 349.2 109.7 344.9 111.5 343.5 110.8 341.4 108.9 341.4 102.5 335.1 103.4 331.3 101.5 326.0 104.9 325.5 107.0 322.1 117.7 325.0 117.0 322.3 118.1 319.6 116.9 316.7 124.9 316.7 126.7 314.1 131.4 313.7 138.1 307.7 140.9 307.0 143.4 309.0 146.0 306.6 147.4 300.4 144.6 288.3 148.4 278.9 148.3 275.4 144.0 267.4 143.8 262.3 141.9 261.8 140.9 258.6 141.8 252.7 142.7 250.5 144.8 249.8Z"/>
+
+    <!-- Coastal islands (real outlines): Côn Đảo, Phú Quốc, Phú Quý, Cát Bà and the Hạ Long Bay group, etc. -->
+    <path id="vnIsles" d="M193.2 309.9 193.7 310.5 192.6 310.9 191.0 309.8ZM123.9 403.9 123.2 404.0 123.7 405.0 122.3 405.1 122.3 406.2 121.6 406.2 121.2 405.5 121.4 404.9 123.8 403.2ZM56.8 359.9 56.8 363.2 55.4 367.3 55.9 368.0 55.9 369.7 54.9 369.1 54.2 365.6 53.0 362.7 50.9 361.2 50.6 359.9 52.9 360.0 54.1 357.9 54.7 357.7ZM134.7 78.3 135.1 78.7 134.4 77.9 134.6 78.8 134.2 79.0 133.4 78.7 134.6 80.1 134.2 79.9 133.8 80.9 133.8 80.3 133.1 80.3 133.6 80.1 133.4 79.7 132.6 79.6 132.8 80.1 132.2 79.8 130.2 77.8 131.6 76.2 131.7 76.8 132.8 77.1 133.0 76.7 133.5 76.7 133.7 77.5 135.4 78.3ZM146.3 75.3 147.0 73.6 146.8 75.1 145.2 77.7 144.7 77.9 145.1 77.0 144.9 76.1 145.8 76.0ZM152.0 72.4 153.3 73.3 152.7 73.1 152.7 74.0 151.9 74.6 152.3 73.7 151.8 72.8ZM146.4 72.4 147.2 72.0 146.0 75.0 142.9 75.7 145.4 73.9 145.8 72.4 146.2 72.5 146.4 71.8ZM148.8 69.8 149.1 69.9 147.7 73.4 147.2 73.3 148.0 70.5ZM147.8 67.2 148.3 67.0 148.3 67.3 146.8 68.7 146.3 68.6 144.9 70.3 142.7 71.6 142.3 71.3 143.5 67.6 143.9 67.8 144.3 67.3 144.5 65.5 146.3 66.7 146.4 67.5ZM153.7 63.2 153.9 63.4 151.1 64.6ZM155.2 62.4 158.6 62.0 157.2 63.0 154.5 63.5 154.7 62.9 154.9 63.3 155.3 62.8 154.1 62.7ZM183.1 355.0 183.6 355.4 183.6 356.3 183.0 356.3 182.7 355.6ZM142.2 77.6 142.6 78.3 141.8 78.0 141.5 77.1ZM142.6 75.9 142.9 76.3 142.2 76.7 141.3 76.1ZM154.1 72.2 154.9 72.0 153.9 73.2Z"/>
+
+    <!-- Archipelagos at their real coordinates (representative islets) -->
+    <g id="hoangSa"><circle cx="271.5" cy="185.5" r="1.7"/><circle cx="252.5" cy="193.6" r="1.7"/><circle cx="254.9" cy="195.8" r="1.7"/><circle cx="249.7" cy="195.8" r="1.7"/><circle cx="281.6" cy="189.8" r="1.7"/><circle cx="267.9" cy="193.0" r="1.7"/></g>
+    <g id="truongSa"><circle cx="260.6" cy="406.6" r="1.5"/><circle cx="324.0" cy="359.9" r="1.5"/><circle cx="321.9" cy="341.5" r="1.5"/><circle cx="285.8" cy="382.0" r="1.5"/><circle cx="354.5" cy="372.6" r="1.5"/><circle cx="316.7" cy="345.1" r="1.5"/><circle cx="321.9" cy="377.5" r="1.5"/><circle cx="284.5" cy="400.7" r="1.5"/><circle cx="320.4" cy="364.2" r="1.5"/><circle cx="323.2" cy="331.3" r="1.5"/><circle cx="323.0" cy="373.1" r="1.5"/><circle cx="309.5" cy="399.6" r="1.5"/><circle cx="343.3" cy="407.7" r="1.5"/></g>
   </defs>
 </svg>
 
@@ -273,34 +323,50 @@ body{padding-bottom:70px}
       <button type="button" data-set="vi" aria-pressed="false">VI</button>
     </div>
     <a class="follow electric-element" href="https://x.com/intent/user?screen_name=BloxyNewsVN" target="_blank" rel="noopener noreferrer" data-en="Follow" data-vi="Theo dõi">Follow</a>
-    <button class="burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav">☰</button>
   </div>
 </header>
 
-<!-- Mobile Categories Popup Drawer -->
-<div class="mob-cat-menu" id="mob-cat-menu" aria-label="Mobile Categories Menu">
-  <button type="button" class="mob-cat-btn" data-c="popular" data-en="Popular" data-vi="Phổ biến">Popular</button>
-  <button type="button" class="mob-cat-btn" data-c="news" data-en="Roblox News" data-vi="Tin Roblox">Roblox News</button>
-  <button type="button" class="mob-cat-btn" data-c="updates" data-en="Platform Updates" data-vi="Cập nhật nền tảng">Platform Updates</button>
-  <button type="button" class="mob-cat-btn" data-c="games" data-en="Games Update" data-vi="Cập nhật game">Games Update</button>
-  <button type="button" class="mob-cat-btn" data-c="vietnam" data-en="Vietnam" data-vi="Việt Nam">Vietnam</button>
+<!-- ============ Mobile: liquid-glass dock + topics sheet ============ -->
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="false" aria-labelledby="sheet-title" aria-hidden="true">
+  <p class="sheet-title" id="sheet-title" data-en="Browse topics" data-vi="Chủ đề">Browse topics</p>
+  <div class="sheet-grid">
+    <button type="button" class="sheet-btn" data-c="popular" style="--i:0"><i class="cd" style="--c:#60a5fa"></i><span data-en="Popular" data-vi="Phổ biến">Popular</span></button>
+    <button type="button" class="sheet-btn" data-c="news" style="--i:1"><i class="cd" style="--c:#34d399"></i><span data-en="Roblox News" data-vi="Tin Roblox">Roblox News</span></button>
+    <button type="button" class="sheet-btn" data-c="updates" style="--i:2"><i class="cd" style="--c:#a78bfa"></i><span data-en="Platform Updates" data-vi="Cập nhật nền tảng">Platform Updates</span></button>
+    <button type="button" class="sheet-btn" data-c="games" style="--i:3"><i class="cd" style="--c:#f472b6"></i><span data-en="Games Update" data-vi="Cập nhật game">Games Update</span></button>
+    <button type="button" class="sheet-btn" data-c="vietnam" style="--i:4"><i class="cd" style="--c:#f87171"></i><span data-en="Vietnam" data-vi="Việt Nam">Vietnam</span></button>
+  </div>
+  <div class="sheet-links">
+    <a class="sheet-link" href="https://x.com/intent/user?screen_name=BloxyNewsVN" target="_blank" rel="noopener noreferrer" data-en="Follow on X" data-vi="Theo dõi trên X">Follow on X</a>
+    <a class="sheet-link alt" href="https://discord.gg/dZd6knudFw" target="_blank" rel="noopener noreferrer">Discord</a>
+  </div>
 </div>
 
-<!-- Mobile Liquid Glass Bottom Bar -->
-<div class="mobile-bottom-nav" aria-label="Mobile Bottom Navigation">
-  <a href="#top" aria-label="Home Logo">
-    <img src="Images/logo.png" width="26" height="26" alt="Logo" style="border-radius:6px;" onerror="this.src='https://placehold.co/52x52/0d121d/60a5fa?text=BN'">
-  </a>
-  
-  <button type="button" id="mob-cat-toggle" aria-label="Categories">
-    <svg viewBox="0 0 24 24"><path d="M4 4h4v4H4V4zm6 0h4v4h-4V4zm6 0h4v4h-4V4zM4 10h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4zM4 16h4v4H4v-4zm6 0h4v4h-4v-4zm6 0h4v4h-4v-4z"/></svg>
+<nav class="dock" id="dock" aria-label="Mobile navigation">
+  <span class="lens" id="lens" aria-hidden="true"></span>
+  <button type="button" class="dock-btn on" data-act="home" aria-current="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5H10v-5h4v5h4.5V10"/></svg>
+    <span data-en="Home" data-vi="Trang chủ">Home</span>
   </button>
-
-  <button type="button" id="mob-lang-btn" aria-label="Language Selector">
-    <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
-    <span class="mob-lang-tag" id="mob-lang-tag">EN</span>
+  <button type="button" class="dock-btn" data-act="news">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3.5"/><path d="M8 9h8M8 12.5h8M8 16h5"/></svg>
+    <span data-en="News" data-vi="Tin tức">News</span>
   </button>
-</div>
+  <button type="button" class="dock-btn" data-act="topics" aria-expanded="false" aria-controls="sheet">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="2"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="2"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="2"/></svg>
+    <span data-en="Topics" data-vi="Chủ đề">Topics</span>
+  </button>
+  <button type="button" class="dock-btn" data-act="about">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8.5" r="3.6"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg>
+    <span data-en="About" data-vi="Giới thiệu">About</span>
+  </button>
+  <button type="button" class="dock-btn" data-act="lang" id="dock-lang-btn" aria-label="Language: English. Switch to Vietnamese">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M3.5 12h17M12 3.5c2.6 2.4 3.9 5.2 3.9 8.5S14.6 18.1 12 20.5C9.4 18.1 8.1 15.3 8.1 12S9.4 5.9 12 3.5z"/></svg>
+    <span id="dock-lang">EN</span>
+  </button>
+</nav>
 
 <main id="main">
   <div class="hero" id="top">
@@ -308,11 +374,11 @@ body{padding-bottom:70px}
       <div class="hero-copy">
         <h1>
           <span class="h1t" data-en="Independent Roblox VN News For" data-vi="Tin tức Roblox VN độc lập dành cho">Independent Roblox VN News For</span>
-          <span class="wordbox electric-element" id="wordbox" aria-hidden="true"><span id="word"></span></span>
+          <span class="wordbox" id="wordbox" aria-hidden="true"><span id="word"></span></span>
           <span class="sr" data-en="players, developers, creators and Vietnam" data-vi="người chơi, nhà phát triển, nhà sáng tạo và Việt Nam"></span>
         </h1>
       </div>
-      <div class="scene electric-element" id="scene" role="img" aria-label="Stylised 3D map of Vietnam in blue with Paracel, Spratly and Phu Quoc islands">
+      <div class="scene" id="scene" role="img" aria-label="Stylised 3D map of Vietnam in blue, with its coastal islands, Hoàng Sa and Trường Sa">
         <div class="stage" id="stage"></div>
       </div>
     </div>
@@ -558,6 +624,7 @@ body{padding-bottom:70px}
   }
   computeStats();
 
+  /* ================= HERO WORD ================= */
   function boxMeasure(animate) {
     var box = $("#wordbox"), w = $("#word");
     if (!box || !w) return;
@@ -606,36 +673,57 @@ body{padding-bottom:70px}
     resizeT = setTimeout(function () { boxMeasure(false); }, 120);
   });
 
-  /* ================= 3D MAP WITH ISLANDS ================= */
-  var LAYERS = 22, STEP = 1.6;
-  var DOTS = [
-    { x: 51.1, y: 16.4, d: 0 },   // Hanoi
-    { x: 82.3, y: 49.4, d: 0.9 }, // Da Nang
-    { x: 62.4, y: 84.3, d: 1.8 }, // Ho Chi Minh City
-    { x: 82.5, y: 40.5, d: 0.4 }, // Hoàng Sa (Paracel Islands)
-    { x: 88.0, y: 77.0, d: 1.2 }, // Trường Sa (Spratly Islands)
-    { x: 26.5, y: 93.5, d: 2.1 }  // Phú Quốc
+  /* ================= 3D MAP ================= */
+  // Same projection the outline was generated with: equirectangular, 27 units per degree.
+  var MAPG = { LON0: 101.9, LAT1: 23.7, K: 27, C: Math.cos(15.6 * Math.PI / 180) };
+  function mp(lon, lat) { return [(lon - MAPG.LON0) * MAPG.C * MAPG.K, (MAPG.LAT1 - lat) * MAPG.K]; }
+
+  // x / y are percentages of the map box. Small pins (s) are the two archipelagos.
+  var PINS = [
+    { n: "Hà Nội",    x: 27.2, y: 16.4, d: 0 },
+    { n: "Đà Nẵng",   x: 43.4, y: 46.9, d: 0.8 },
+    { n: "TP.HCM",    x: 33.1, y: 79.3, d: 1.6 },
+    { n: "Hoàng Sa",  x: 69.7, y: 43.7, d: 0.4, s: 1 },
+    { n: "Trường Sa", x: 83.4, y: 85.0, d: 1.2, s: 1 }
   ];
   var BASE = { x: 28, y: -28, z: 3 };
+
+  function graticule() {
+    var s = "", i, a, b;
+    for (i = 102; i <= 116; i += 2) {
+      a = mp(i, 7.2); b = mp(i, 24.4);
+      s += '<line x1="' + a[0].toFixed(1) + '" y1="' + a[1].toFixed(1) + '" x2="' + b[0].toFixed(1) + '" y2="' + b[1].toFixed(1) + '"/>';
+    }
+    for (i = 8; i <= 24; i += 2) {
+      a = mp(101.2, i); b = mp(117, i);
+      s += '<line x1="' + a[0].toFixed(1) + '" y1="' + a[1].toFixed(1) + '" x2="' + b[0].toFixed(1) + '" y2="' + b[1].toFixed(1) + '"/>';
+    }
+    return s;
+  }
 
   function buildStage() {
     var stage = $("#stage");
     if (!stage) return null;
-    var vb = 'viewBox="0 0 340 452" aria-hidden="true" focusable="false"';
-    var topZ = ((LAYERS - 1) / 2) * STEP;
-    var html = '<svg class="layer sh" ' + vb + ' style="transform:translateZ(' + (-topZ - 14).toFixed(1) +
-      'px) translate(16px,18px)"><use href="#vnPath"/><use href="#hoangSa"/><use href="#truongSa"/><use href="#phuQuoc"/></svg>';
-    for (var i = 0; i < LAYERS; i++) {
-      var z = (i - (LAYERS - 1) / 2) * STEP;
-      var l = 15 + (i / (LAYERS - 1)) * 22;
+    var small = window.matchMedia && matchMedia("(max-width:900px)").matches;
+    var N = small ? 11 : 18, STEP = small ? 3.1 : 1.9;
+    var vb = 'viewBox="0 0 377.1 440.1" aria-hidden="true" focusable="false"';
+    var shapes = '<use href="#vnPath"/><use href="#vnIsles"/><use href="#hoangSa"/><use href="#truongSa"/>';
+    var topZ = ((N - 1) / 2) * STEP;
+    var html = '<svg class="layer floor" viewBox="-75.4 -88 528 616.1" aria-hidden="true" focusable="false" style="transform:translateZ(' +
+      (-topZ - 22).toFixed(1) + 'px)">' + graticule() + "</svg>";
+    html += '<svg class="layer sh" ' + vb + ' style="transform:translateZ(' + (-topZ - 14).toFixed(1) +
+      'px) translate(14px,16px)">' + shapes + "</svg>";
+    for (var i = 0; i < N; i++) {
+      var z = (i - (N - 1) / 2) * STEP;
+      var l = 13 + (i / (N - 1)) * 25;
       html += '<svg class="layer" ' + vb + ' style="transform:translateZ(' + z.toFixed(2) +
-        'px);fill:hsl(218 80% ' + l.toFixed(1) + '%)"><use href="#vnPath"/><use href="#hoangSa"/><use href="#truongSa"/><use href="#phuQuoc"/></svg>';
+        'px);fill:hsl(218 80% ' + l.toFixed(1) + '%)">' + shapes + "</svg>";
     }
-    html += '<svg class="layer top" ' + vb + ' style="transform:translateZ(' + (topZ + 0.8).toFixed(2) +
-      'px)"><use href="#vnPath"/><use href="#hoangSa"/><use href="#truongSa"/><use href="#phuQuoc"/></svg>';
-    DOTS.forEach(function (d) {
-      html += '<span class="dot" style="left:' + d.x + '%;top:' + d.y + '%;--pd:' + d.d +
-        's;transform:translateZ(' + (topZ + 6).toFixed(1) + 'px)"></span>';
+    html += '<svg class="layer top" ' + vb + ' style="transform:translateZ(' + (topZ + 0.8).toFixed(2) + 'px)">' + shapes + "</svg>";
+    html += '<svg class="layer sheen" ' + vb + ' style="transform:translateZ(' + (topZ + 1.4).toFixed(2) + 'px)">' + shapes + "</svg>";
+    PINS.forEach(function (p) {
+      html += '<span class="pin' + (p.s ? " sm" : "") + '" style="left:' + p.x + "%;top:" + p.y + "%;--pd:" + p.d +
+        "s;--tz:" + (topZ + 3).toFixed(1) + 'px"><i class="dot"></i><b class="tag3d">' + p.n + "</b></span>";
     });
     stage.innerHTML = html;
     return stage;
@@ -644,16 +732,25 @@ body{padding-bottom:70px}
   function startStage() {
     var stage = buildStage(), hero = $("#top");
     if (!stage || !hero) return;
-    function tf(rx, ry, rz) { return "rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) rotateZ(" + rz + "deg)"; }
-    stage.style.transform = tf(BASE.x, BASE.y, BASE.z);
-    if (reduce || !("IntersectionObserver" in window)) return;
+    function setRot(rx, ry, rz) {
+      stage.style.transform = "rotateX(" + rx.toFixed(2) + "deg) rotateY(" + ry.toFixed(2) + "deg) rotateZ(" + rz + "deg)";
+      stage.style.setProperty("--rx", rx.toFixed(2));
+      stage.style.setProperty("--ry", ry.toFixed(2));
+      stage.style.setProperty("--rz", rz);
+    }
+    setRot(BASE.x, BASE.y, BASE.z);
+    if (reduce || !("IntersectionObserver" in window)) {
+      var anim = document.getElementById("vnSheenAnim");
+      if (anim && anim.parentNode) anim.parentNode.removeChild(anim);
+      return;
+    }
 
     var pt = { x: 0, y: 0 }, cur = { x: 0, y: 0 }, raf = 0;
     function frame(t) {
       cur.x += (pt.x - cur.x) * 0.06;
       cur.y += (pt.y - cur.y) * 0.06;
       var idleY = Math.sin(t / 2800) * 7, idleX = Math.sin(t / 3600) * 3;
-      stage.style.transform = tf(BASE.x - cur.y * 10 + idleX, BASE.y + cur.x * 16 + idleY, BASE.z);
+      setRot(BASE.x - cur.y * 10 + idleX, BASE.y + cur.x * 16 + idleY, BASE.z);
       raf = requestAnimationFrame(frame);
     }
     hero.addEventListener("pointermove", function (e) {
@@ -668,6 +765,7 @@ body{padding-bottom:70px}
     }).observe(hero);
   }
 
+  /* ================= STATS ================= */
   function renderStats(animate) {
     $("#stats").innerHTML = STATS.map(function (s, i) {
       return '<div class="stat electric-element rv pop' + (animate ? "" : " in") + '" style="--d:' + (i * 0.12).toFixed(2) + 's"><b data-i="' + i + '">' +
@@ -721,16 +819,15 @@ body{padding-bottom:70px}
     statObserver.observe($("#stats"));
   }
 
+  /* ================= STORIES ================= */
   function renderChips() {
     var keys = ["popular"].concat(Object.keys(CATS));
     $("#chips").innerHTML = keys.map(function (k) {
       var label = k === "popular" ? T("Phổ biến", "Popular") : CATS[k][lang];
       return '<button type="button" class="chip electric-element" data-c="' + k + '" aria-pressed="' + (k === cat) + '">' + esc(label) + "</button>";
     }).join("");
-
-    $$(".mob-cat-btn").forEach(function (b) {
-      var k = b.getAttribute("data-c");
-      b.setAttribute("aria-pressed", String(k === cat));
+    $$(".sheet-btn").forEach(function (b) {
+      b.setAttribute("aria-pressed", String(b.getAttribute("data-c") === cat));
     });
   }
 
@@ -819,8 +916,9 @@ body{padding-bottom:70px}
     lang = l === "vi" ? "vi" : "en";
     document.documentElement.lang = lang;
     $$(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-set") === lang)); });
-    var tag = $("#mob-lang-tag");
-    if (tag) tag.textContent = lang.toUpperCase();
+    var dl = $("#dock-lang"), db = $("#dock-lang-btn");
+    if (dl) dl.textContent = lang.toUpperCase();
+    if (db) db.setAttribute("aria-label", lang === "en" ? "Language: English. Switch to Vietnamese" : "Ngôn ngữ: Tiếng Việt. Chuyển sang tiếng Anh");
     applyText();
     renderStats(!!first); renderChips(); renderStories(first ? 0 : Infinity); renderTeam(!!first); renderContact();
     resetWords();
@@ -828,6 +926,15 @@ body{padding-bottom:70px}
     if (push) { try { history.replaceState(null, "", "?lang=" + lang + location.hash); } catch (e) { } }
   }
 
+  // Fades the page out, swaps the language, fades back in.
+  function switchLang(l) {
+    if (l === lang) return;
+    if (reduce) { setLang(l, true); return; }
+    document.body.classList.add("swap");
+    setTimeout(function () { setLang(l, true); document.body.classList.remove("swap"); }, 260);
+  }
+
+  /* ================= X IMPORT ================= */
   var FX = "https://api.fxtwitter.com/";
   var refreshTimer = null;
 
@@ -870,81 +977,182 @@ body{padding-bottom:70px}
       .catch(function (err) { console.warn("Import failed for " + s.url + ":", err.message || err); });
   }
 
-  $$(".lang button").forEach(function (b) {
-    b.addEventListener("click", function () {
-      var l = b.getAttribute("data-set");
-      if (l === lang) return;
-      if (reduce) { setLang(l, true); return; }
-      document.body.classList.add("swap");
-      setTimeout(function () { setLang(l, true); document.body.classList.remove("swap"); }, 260);
-    });
-  });
+  /* ================= MOBILE DOCK (liquid glass) =================
+     - the lens slides (and stretches) to the active tab; it follows your finger when you slide across the dock
+     - pressing magnifies the lens, releasing makes it wobble like jelly
+     - the active tab follows the section you are scrolling through
+     Tweak: the spring is --spring in the CSS; the lens look is the .lens rules. */
+  var dock = $("#dock"), lens = $("#lens"), sheet = $("#sheet"), scrim = $("#scrim");
+  var topicsBtn = dock ? dock.querySelector('[data-act="topics"]') : null;
+  var activeTab = "home", sheetOpen = false, spyLock = 0, lastLX = -1;
+  var stretchT = null, jellyT = null, startBtn = null, hoverBtn = null, downId = null;
 
-  /* Mobile language switcher */
-  var mobLangBtn = $("#mob-lang-btn");
-  if (mobLangBtn) {
-    mobLangBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      var nextLang = lang === "en" ? "vi" : "en";
-      setLang(nextLang, true);
-    });
-  }
+  function buzz(ms) { try { if (navigator.vibrate) navigator.vibrate(ms); } catch (e) { } }
 
-  /* Mobile category menu toggle */
-  var mobCatToggle = $("#mob-cat-toggle");
-  var mobCatMenu = $("#mob-cat-menu");
-  if (mobCatToggle && mobCatMenu) {
-    mobCatToggle.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      mobCatMenu.classList.toggle("open");
-    });
-
-    mobCatMenu.addEventListener("click", function (e) {
-      var b = e.target.closest(".mob-cat-btn"); 
-      if (!b) return;
-      cat = b.getAttribute("data-c"); 
-      renderChips(); 
-      renderStories(0);
-      mobCatMenu.classList.remove("open");
-      var storiesSec = $("#stories");
-      if (storiesSec) storiesSec.scrollIntoView({ behavior: "smooth" });
-    });
-  }
-
-  // Close mobile category menu when clicking outside
-  document.addEventListener("click", function (e) {
-    if (mobCatMenu && mobCatMenu.classList.contains("open")) {
-      if (!mobCatMenu.contains(e.target) && e.target !== mobCatToggle && !mobCatToggle.contains(e.target)) {
-        mobCatMenu.classList.remove("open");
-      }
+  function moveLens(btn, instant) {
+    if (!btn || !lens) return;
+    var x = btn.offsetLeft, w = btn.offsetWidth;
+    if (!w) return;
+    if (instant) lens.style.transition = "none";
+    lens.style.setProperty("--lx", x + "px");
+    lens.style.setProperty("--lw", w + "px");
+    if (instant) { void lens.offsetWidth; lens.style.transition = ""; }
+    else if (lastLX >= 0 && Math.abs(x - lastLX) > 2 && !reduce) {
+      lens.classList.add("stretch");
+      clearTimeout(stretchT);
+      stretchT = setTimeout(function () { lens.classList.remove("stretch"); }, 260);
     }
-  });
+    lastLX = x;
+  }
 
+  function paintDock(instant) {
+    if (!dock) return;
+    var cur = sheetOpen ? "topics" : activeTab, curBtn = null;
+    $$(".dock-btn", dock).forEach(function (b) {
+      var on = b.getAttribute("data-act") === cur;
+      b.classList.toggle("on", on);
+      if (on) { b.setAttribute("aria-current", "true"); curBtn = b; } else b.removeAttribute("aria-current");
+    });
+    moveLens(curBtn, instant);
+  }
+
+  function openSheet() {
+    if (!sheet) return;
+    sheetOpen = true;
+    sheet.classList.add("open"); scrim.classList.add("open");
+    sheet.setAttribute("aria-hidden", "false");
+    if (topicsBtn) topicsBtn.setAttribute("aria-expanded", "true");
+    paintDock();
+  }
+  function closeSheet() {
+    if (!sheet || !sheetOpen) return;
+    sheetOpen = false;
+    sheet.classList.remove("open"); scrim.classList.remove("open");
+    sheet.setAttribute("aria-hidden", "true");
+    if (topicsBtn) topicsBtn.setAttribute("aria-expanded", "false");
+    paintDock();
+  }
+
+  function goTo(tab) {
+    spyLock = Date.now() + 950;
+    activeTab = tab;
+    paintDock();
+    var behavior = reduce ? "auto" : "smooth";
+    if (tab === "home") { window.scrollTo({ top: 0, behavior: behavior }); return; }
+    if (tab === "news" && cat !== "popular") { cat = "popular"; renderChips(); renderStories(0); }
+    var el = document.getElementById(tab === "news" ? "stories" : "about");
+    if (el) el.scrollIntoView({ behavior: behavior, block: "start" });
+  }
+
+  function activate(btn) {
+    var act = btn.getAttribute("data-act");
+    buzz(10);
+    if (act === "topics") { if (sheetOpen) closeSheet(); else openSheet(); return; }
+    if (act === "lang") {
+      closeSheet();
+      switchLang(lang === "en" ? "vi" : "en");
+      setTimeout(function () { paintDock(); }, 520);
+      return;
+    }
+    closeSheet();
+    goTo(act);
+  }
+
+  function endPress(btn) {
+    startBtn = hoverBtn = null; downId = null;
+    lens.classList.remove("press", "stretch", "jelly");
+    void lens.offsetWidth;
+    lens.classList.add("jelly");
+    clearTimeout(jellyT);
+    jellyT = setTimeout(function () { lens.classList.remove("jelly"); }, 700);
+    if (btn) activate(btn); else paintDock();
+  }
+
+  function btnAt(x, y) {
+    var el = document.elementFromPoint(x, y);
+    return el && el.closest ? el.closest(".dock-btn") : null;
+  }
+
+  if (dock && lens) {
+    dock.addEventListener("pointerdown", function (e) {
+      var b = e.target.closest(".dock-btn");
+      if (!b) return;
+      startBtn = hoverBtn = b; downId = e.pointerId;
+      lens.classList.remove("jelly");
+      lens.classList.add("press");
+      moveLens(b);
+    });
+    dock.addEventListener("pointermove", function (e) {
+      if (!startBtn || e.pointerId !== downId) return;
+      var b = btnAt(e.clientX, e.clientY);
+      if (b && b !== hoverBtn) { hoverBtn = b; moveLens(b); buzz(4); }
+    });
+    document.addEventListener("pointerup", function (e) {
+      if (!startBtn || e.pointerId !== downId) return;
+      endPress(btnAt(e.clientX, e.clientY));
+    });
+    document.addEventListener("pointercancel", function (e) {
+      if (!startBtn || e.pointerId !== downId) return;
+      endPress(null);
+    });
+    // keyboard / screen reader activation (pointer taps are handled on pointerup)
+    dock.addEventListener("click", function (e) {
+      var b = e.target.closest(".dock-btn");
+      if (b && e.detail === 0) activate(b);
+    });
+
+    scrim.addEventListener("click", closeSheet);
+    sheet.addEventListener("click", function (e) {
+      if (e.target.closest(".sheet-link")) { closeSheet(); return; }
+      var b = e.target.closest(".sheet-btn");
+      if (!b) return;
+      cat = b.getAttribute("data-c");
+      renderChips(); renderStories(0);
+      buzz(8);
+      sheetOpen = true; closeSheet();
+      spyLock = Date.now() + 1000;
+      activeTab = "news"; paintDock();
+      var el = $("#stories");
+      if (el) el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+    });
+
+    // active tab follows the section in the middle of the screen
+    if ("IntersectionObserver" in window) {
+      var spyMap = { top: "home", impact: "home", stories: "news", about: "about", contact: "about" };
+      var spy = new IntersectionObserver(function (es) {
+        es.forEach(function (e) {
+          if (!e.isIntersecting || Date.now() < spyLock) return;
+          var t = spyMap[e.target.id];
+          if (t && t !== activeTab) { activeTab = t; paintDock(); }
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      ["top", "impact", "stories", "about", "contact"].forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el) spy.observe(el);
+      });
+    }
+
+    window.addEventListener("resize", function () { paintDock(true); });
+    window.addEventListener("load", function () { paintDock(true); });
+  }
+
+  /* ================= EVENTS ================= */
+  $$(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () { switchLang(b.getAttribute("data-set")); });
+  });
   $("#chips").addEventListener("click", function (e) {
     var b = e.target.closest("button[data-c]"); if (!b) return;
     cat = b.getAttribute("data-c"); renderChips(); renderStories(0);
   });
   $("#q").addEventListener("input", function () { renderStories(Infinity); });
-  $("#burger").addEventListener("click", function () {
-    var open = $("#nav").classList.toggle("open");
-    this.setAttribute("aria-expanded", String(open));
-  });
   $$("#nav a").forEach(function (a) {
     a.addEventListener("click", function () {
       var c = a.getAttribute("data-cat");
       if (c) { cat = c; renderChips(); renderStories(0); }
-      $("#nav").classList.remove("open");
-      $("#burger").setAttribute("aria-expanded", "false");
     });
   });
   document.addEventListener("keydown", function (e) {
-    if (e.key === "Escape") { 
-      $("#nav").classList.remove("open"); 
-      $("#mob-cat-menu").classList.remove("open");
-      $("#burger").setAttribute("aria-expanded", "false"); 
-    }
+    if (e.key === "Escape") closeSheet();
   });
 
   var hdr = $("header"), heroEl = $("#top"), ticking = false;
@@ -967,11 +1175,12 @@ body{padding-bottom:70px}
   $("#yr").textContent = new Date().getFullYear();
   var initial = "en";
   try {
-    var p = new URLSearchParams(location.search).get("lang");
-    initial = p === "vi" || p === "en" ? p : (navigator.language || "en").slice(0, 2) === "vi" ? "vi" : "en";
+    var qp = new URLSearchParams(location.search).get("lang");
+    initial = qp === "vi" || qp === "en" ? qp : (navigator.language || "en").slice(0, 2) === "vi" ? "vi" : "en";
   } catch (e) { }
   setLang(initial, false, true);
   startStage();
+  paintDock(true);
   onScroll();
   VALID.forEach(loadFromX);
 })();
