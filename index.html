@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark light">
+<link rel="preload" href="Fonts/BuilderSans-Regular-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="Fonts/BuilderSans-ExtraBold-800.woff2" as="font" type="font/woff2" crossorigin>
 <meta name="theme-color" content="#000000">
 <title>Bloxy News VN — Independent Roblox News</title>
 <meta name="description" content="Independent Roblox community news in English and Vietnamese.">
@@ -30,6 +32,16 @@
 })();
 </script>
 <style>
+/* Builder Sans */
+@font-face{font-family:"Builder Sans";font-weight:400;font-style:normal;font-display:swap;
+src:url("Fonts/BuilderSans-Regular-400.woff2") format("woff2"),url("Fonts/BuilderSans-Regular-400.otf") format("opentype")}
+@font-face{font-family:"Builder Sans";font-weight:600;font-style:normal;font-display:swap;
+src:url("Fonts/BuilderSans-SemiBold-600.woff2") format("woff2"),url("Fonts/BuilderSans-SemiBold-600.otf") format("opentype")}
+@font-face{font-family:"Builder Sans";font-weight:700;font-style:normal;font-display:swap;
+src:url("Fonts/BuilderSans-Bold-700.woff2") format("woff2"),url("Fonts/BuilderSans-Bold-700.otf") format("opentype")}
+@font-face{font-family:"Builder Sans";font-weight:800;font-style:normal;font-display:swap;
+src:url("Fonts/BuilderSans-ExtraBold-800.woff2") format("woff2"),url("Fonts/BuilderSans-ExtraBold-800.otf") format("opentype")}
+
 /* ================= THEMES — every colour lives here ================= */
 :root{--bg:#000;--bg2:#07090f;--card:#0d121d;--line:#1b2438;--text:#f2f6ff;--muted:#8fa0c4;--accent:#3b82f6;--accent2:#60a5fa;--link:#60a5fa;--r:18px;--max:1120px;
 --ease:cubic-bezier(.22,1,.36,1);--ease2:cubic-bezier(.4,0,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
@@ -84,7 +96,7 @@ color-scheme:light}
 
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;scroll-padding-top:96px}
-body{font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
+body{font:16px/1.6 "Builder Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 button,input{font:inherit;color:inherit}
 ::placeholder{color:var(--muted);opacity:1}
@@ -211,9 +223,9 @@ transition:opacity .35s var(--ease) calc(var(--i,0) * .04s + .1s),translate .55s
 background:radial-gradient(ellipse 60% 60% at 76% 52%,var(--hero-glow),transparent 70%)}
 .hero-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:24px;align-items:center;width:100%}
 .hero-copy{translate:0 calc(var(--hp,0) * -50px);opacity:calc(1 - var(--hp,0) * .85)}
-.hero h1{font-size:clamp(2.2rem,5.2vw,4.7rem);line-height:1.08;letter-spacing:-.035em;font-weight:800}
+.hero h1{font-size:clamp(2.2rem,5.2vw,4.7rem);line-height:1.12;letter-spacing:-.035em;font-weight:800}
 .h1t{display:block}
-.wordbox{display:block;margin-top:.22em;padding:.06em .32em .12em;border-radius:.3em;white-space:nowrap;overflow:hidden;color:#fff;
+.wordbox{display:block;margin-top:.14em;padding:.14em .32em .12em;border-radius:.3em;white-space:nowrap;overflow:hidden;color:#fff;
 background:linear-gradient(120deg,#1d4ed8,#3b82f6 45%,#60a5fa 78%,#2563eb);background-size:220% 100%;
 box-shadow:0 14px 44px -12px rgba(59,130,246,.75),inset 0 1px 0 rgba(255,255,255,.28);
 transition:width .6s var(--ease)}
